@@ -2,12 +2,12 @@
 
 require_once "config/database.php";
 
-function insertEmploye(string $matricule_emp, string $nom_emp, string $prenom_emp, string $date_naissance, string $email, string $date_embauche, string $code_poste, string $code_dept)
+function insertEmploye(string $matricule_emp, string $nom_emp, string $prenom_emp, string $date_naissance, string $email, string $telephone, string $date_embauche, string $code_poste, string $code_dept)
 {
 
     global $pdo;
     try {
-        $sql = "INSERT INTO Employe (matricule_emp, nom_emp, prenom_emp, date_naiss, date_embauche, email, code_poste, code_dept) VALUES (:matricule_emp, :nom_emp, :prenom_emp, :date_naiss, :date_embauche, :email, :code_poste, :code_dept)";
+        $sql = "INSERT INTO Employe (matricule_emp, nom_emp, prenom_emp, date_naiss, date_embauche, email, telephone, code_poste, code_dept) VALUES (:matricule_emp, :nom_emp, :prenom_emp, :date_naiss, :date_embauche, :email, :telephone, :code_poste, :code_dept)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':matricule_emp', $matricule_emp);
         $stmt->bindParam(':nom_emp', $nom_emp);
@@ -15,6 +15,7 @@ function insertEmploye(string $matricule_emp, string $nom_emp, string $prenom_em
         $stmt->bindParam(':date_naiss', $date_naissance);
         $stmt->bindParam(':date_embauche', $date_embauche);
         $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':telephone', $telephone);
         $stmt->bindParam(':code_poste', $code_poste);
         $stmt->bindParam(':code_dept', $code_dept);
         return $stmt->execute();
