@@ -2,7 +2,7 @@
 
 $host = "localhost";
 $db = "rh_entreprise";
-$mdp = "lome2006";
+$mdp = "";
 $user = "root";
 try {
 
