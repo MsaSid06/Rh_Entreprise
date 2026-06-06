@@ -115,61 +115,64 @@ function getBulletins()
 function displayEmploye(String $matricule_emp)
 {
     $users = getEmployes();
-    if ($users) {
-        foreach ($users as $user) {
-            if ($user['matricule_emp'] == $matricule_emp) {
-
-                echo "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse;'>
-    <tr>
-        <th style='background-color: #f2f2f2;'>Champ</th>
-        <th style='background-color: #f2f2f2;'>Valeur</th>
-    </tr>
-    <tr>
-        <td><strong>Matricule</strong></td>
-        <td>" . $user['matricule_emp'] . "</td>
-    </tr>
-    <tr>
-        <td><strong>Nom</strong></td>
-        <td>" . $user['nom_emp'] . "</td>
-    </tr>
-    <tr>
-        <td><strong>Prénom</strong></td>
-        <td>" . $user['prenom_emp'] . "</td>
-    </tr>
-    <tr>
-        <td><strong>Email</strong></td>
-        <td>" . $user['email'] . "</td>
-    </tr>
-    <tr>
-        <td><strong>Date de naissance</strong></td>
-        <td>" . $user['date_naiss'] . "</td>
-    </tr>
-    <tr>
-        <td><strong>Date d'embauche</strong></td>
-        <td>" . $user['date_embauche'] . "</td>
-    </tr>
-    <tr>
-        <td><strong>Téléphone</strong></td>
-        <td>" . $user['telephone'] . "</td>
-    </tr>
-</table>";
-            }
-        }
-    } else {
-        echo "Aucun utilisateur trouvé.";
+    if (!$users) {
+        return false ;
     }
-}
+    foreach ($users as $user) {
+        if ($user['matricule_emp'] == $matricule_emp) {
 
+            echo "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse;'>
+            <tr>
+                <th style='background-color: #f2f2f2;'>Champ</th>
+                <th style='background-color: #f2f2f2;'>Valeur</th>
+            </tr>
+            <tr>
+                <td><strong>Matricule</strong></td>
+                <td>" . $user['matricule_emp'] . "</td>
+            </tr>
+            <tr>
+                <td><strong>Nom</strong></td>
+                <td>" . $user['nom_emp'] . "</td>
+            </tr>
+            <tr>
+                <td><strong>Prénom</strong></td>
+                <td>" . $user['prenom_emp'] . "</td>
+            </tr>
+            <tr>
+                <td><strong>Email</strong></td>
+                <td>" . $user['email'] . "</td>
+            </tr>
+            <tr>
+                <td><strong>Date de naissance</strong></td>
+                <td>" . $user['date_naiss'] . "</td>
+            </tr>
+            <tr>
+                <td><strong>Date d'embauche</strong></td>
+                <td>" . $user['date_embauche'] . "</td>
+            </tr>
+            <tr>
+                <td><strong>Téléphone</strong></td>
+                <td>" . $user['telephone'] . "</td>
+            </tr>
+            </table>";
+            return true ;
+        }
+    }
+    return false;
+}
 
 function displayContrat(String $matricule_emp)
 {
     $contrats = getContrats();
-    if ($contrats) {
-        foreach ($contrats as $contrat) {
-            if ($contrat['matricule_emp'] == $matricule_emp) {
+    if (!$contrats) {
+        return false;
+    }
 
-                echo
-                "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse;'>
+    foreach ($contrats as $contrat) {
+        if ($contrat['matricule_emp'] == $matricule_emp) {
+
+            echo
+            "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse;'>
                 <tr>
                     <th style='background-color: #f2f2f2;'>Champ</th>
                     <th style='background-color: #f2f2f2;'>Valeur</th>
@@ -195,23 +198,24 @@ function displayContrat(String $matricule_emp)
                     <td>" . ($contrat['est_actif'] ? 'Oui' : 'Non') . "</td>
                 </tr>
             </table><br>";
-            }
+            return true;
         }
-    } else {
-        echo "Aucun contrat trouvé.";
     }
+    return false;
 }
 
 
 function displayAbsences(String $matricule_emp)
 {
     $presences = getPresences();
-    if ($presences) {
-        foreach ($presences as $presence) {
-            if ($presence['matricule_emp'] == $matricule_emp /*&& $presence['statut_presence'] == "absent"*/) {
+    if (!$presences) {
+        return false;
+    }
+    foreach ($presences as $presence) {
+        if ($presence['matricule_emp'] == $matricule_emp /*&& $presence['statut_presence'] == "absent"*/) {
 
-                echo
-                "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse;'>
+            echo
+            "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse;'>
                     <tr>
                         <th style='background-color: #f2f2f2;'>Champ</th>
                         <th style='background-color: #f2f2f2;'>Valeur</th>
@@ -233,24 +237,24 @@ function displayAbsences(String $matricule_emp)
                         <td>" . $presence['statut_presence'] . "</td>
                     </tr>
                 </table>";
-            }
+            return true;
         }
-    } else {
-        echo "Aucune présence trouvée.";
     }
+    return false;
 }
-
 
 
 function displayConges(String $matricule_emp)
 {
     $conges = getConges();
-    if ($conges) {
-        foreach ($conges as $conge) {
-            if ($conge['matricule_emp'] == $matricule_emp) {
+    if (!$conges) {
+        return false;
+    }
+    foreach ($conges as $conge) {
+        if ($conge['matricule_emp'] == $matricule_emp) {
 
-                echo
-                "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse;'>
+            echo
+            "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse;'>
                     <tr>
                         <th style='background-color: #f2f2f2;'>Champ</th>
                         <th style='background-color: #f2f2f2;'>Valeur</th>
@@ -276,10 +280,10 @@ function displayConges(String $matricule_emp)
                         <td>" . $conge['nb_jour_restant'] . "</td>
                     </tr>
                 </table>";
+            return true;
 
-            }
         }
-    } else {
-        echo "Aucun congé trouvé.";
+
     }
+    return false ;
 }

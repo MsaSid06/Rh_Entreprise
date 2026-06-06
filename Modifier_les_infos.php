@@ -116,6 +116,7 @@ if(isset($_POST['modifier_presence'])) {
     <header>
         <nav>
             <ul>
+                <li><a href="index.php">Accueil</a></li>
                 <li><a href="#modifier-employe-form">Modifier un employé</a></li>
                 <li><a href="#modifier-contrat-form">Modifier un Contrat</a></li>
                 <li><a href="#modifier-conge-form">Modifier un Congé</a></li>

@@ -136,6 +136,7 @@ if (isset($_POST['ajouter_presence'])) {
     <header>
         <nav>
             <ul>
+                <li><a href="index.php">Accueil</a></li>
                 <li><a href="#ajouter-employe-form">Ajouter un employé</a></li>
                 <li><a href="#ajouter-contrat-form">Ajouter un Contrat</a></li>
                 <li><a href="#ajouter-conge-form">Ajouter un Congé</a></li>
