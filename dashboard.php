@@ -75,42 +75,55 @@ $taux     = getTauxAbsenteisme();
 $conges   = getCongeEnAttenteApprobation();
 ?>
 <link rel="stylesheet" href="dashboard.css">
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; padding: 1rem 0;">
 
-    <!-- Masse salariale -->
-    <div class="stat-card">
-        <div class="stat-label">
-            <i class="ti ti-currency-franc"></i>
-            Masse salariale totale
+<div class="dashboard">
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Masse salariale totale</div>
+            <p class="stat-value">
+                <?= number_format($masse['masse_salariale_totale'], 0, ',', ' ') ?>
+                <span class="stat-unit">FCFA</span>
+            </p>
         </div>
-        <p class="stat-value">
-            <?= number_format($masse['masse_salariale_totale'], 0, ',', ' ') ?>
-            <span class="stat-unit">FCFA</span>
-        </p>
+        <div class="stat-card">
+            <div class="stat-label">Taux d'absentéisme global</div>
+            <p class="stat-value">
+                <?= $taux['taux_absenteisme_global'] ?>
+                <span class="stat-unit">%</span>
+            </p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Congés en attente</div>
+            <p class="stat-value">
+                <?= count($conges) ?>
+                <span class="stat-unit">congé(s)</span>
+            </p>
+        </div>
     </div>
 
-    <!-- Taux d'absentéisme -->
-    <div class="stat-card">
-        <div class="stat-label">
-            <i class="ti ti-chart-pie"></i>
-            Taux d'absentéisme global
-        </div>
-        <p class="stat-value">
-            <?= $taux['taux_absenteisme_global'] ?>
-            <span class="stat-unit">%</span>
-        </p>
-    </div>
-
-    <!-- Congés en attente -->
-    <div class="stat-card">
-        <div class="stat-label">
-            <i class="ti ti-clock-pause"></i>
-            Congés en attente
-        </div>
-        <p class="stat-value">
-            <?= count($conges) ?>
-            <span class="stat-unit">congé(s)</span>
-            </span>
+    <p class="section-title">Congés non approuvés</p>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Employé</th>
+                    <th>Type de congé</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($conges as $c) : ?>
+                <tr>
+                    <td><?= $c['nom_emp'] . ' ' . $c['prenom_emp'] ?></td>
+                    <td><?= $c['type_conge'] ?></td>
+                    <td><?= $c['date_debut_conge'] ?></td>
+                    <td><?= $c['date_fin_conge'] ?></td>
+                </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
     </div>
 
 </div>
