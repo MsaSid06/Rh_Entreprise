@@ -15,11 +15,8 @@ function ajouterEmploye()
         $code_dept = strtoupper($_POST['code_dept']);
         $telephone = $_POST['telephone'];
         $return = insertEmploye($matricule_emp, $nom_emp, $prenom_emp, $date_naissance, $email, $telephone, $date_embauche, $code_poste, $code_dept);
-        if ($return === true) {
-            echo "<p style='color: green;'>Employé ajouté avec succès.</p>";
-        } else {
-            echo "<p style='color: red;'>Erreur lors de l'ajout de l'employé : $return</p>";
-        }
+
+        return $return;
     }
     return false;
 }
@@ -35,11 +32,7 @@ function ajouterContrat()
         $salaire_brut = floatval($_POST['salaire_brut']);
         $est_actif = boolval($_POST['est_actif']);
         $return = insertContrat($matricule_emp, $type_contrat, $date_debut_contrat, $date_fin_contrat, $salaire_brut, $est_actif);
-        if ($return === true) {
-            echo "<p style='color: green;'>Contrat ajouté avec succès.</p>";
-        } else {
-            echo "<p style='color: red;'>Erreur lors de l'ajout du contrat : $return</p>";
-        }
+        return $return;
     }
     return false;
 }
@@ -55,11 +48,7 @@ function ajouterConge()
         $statut_conge = $_POST['statut_conge'];
 
         $return = insertConge($matricule_emp, $type_conge, $statut_conge, $date_debut_conge, $date_fin_conge, $nb_jour_restant);
-        if ($return === true) {
-            echo "<p style='color: green;'>Congé ajouté avec succès.</p>";
-        } else {
-            echo "<p style='color: red;'>Erreur lors de l'ajout du congé : $return</p>";
-        }
+        return $return;
     }
     return false;
 }
@@ -74,11 +63,7 @@ function ajouterPresence()
         $statut_presence = $_POST['statut_presence'];
 
         $return = insertPresence($matricule_emp, $heure_arrive, $heure_depart, $date_presence, $statut_presence);
-        if ($return === true) {
-            $_POST['reponse'] = "<p style='color: green;'>Présence ajoutée avec succès.</p>";
-        } else {
-            $_POST['reponse'] = "<p style='color: red;'>Erreur lors de l'ajout de la présence : $return</p>";
-        }
+        return $return;
     }
     return false;
 }

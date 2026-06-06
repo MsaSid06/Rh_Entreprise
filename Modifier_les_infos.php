@@ -15,11 +15,7 @@ function modifierEmploye()
         $code_dept = strtoupper($_POST['nouveau_code_dept']);
         $telephone = $_POST['nouveau_telephone'];
         $return = updateEmploye($matricule_emp, $nom_emp, $prenom_emp, $date_naissance, $email, $telephone, $date_embauche, $code_poste, $code_dept);
-        if ($return === true) {
-            echo "<p style='color: green;'>Employé modifié avec succès.</p>";
-        } else {
-            echo "<p style='color: red;'>Erreur lors de la modification de l'employé : $return</p>";
-        }
+        return $return;
     }
     return false;
 }
@@ -35,11 +31,7 @@ function modifierContrat()
         $salaire_brut = floatval($_POST['nouveau_salaire_brut']);
         $est_actif = boolval($_POST['nouveau_est_actif']);
         $return = updateContrat($matricule_emp, $type_contrat, $date_debut_contrat, $date_fin_contrat, $salaire_brut, $est_actif);
-        if ($return === true) {
-            echo "<p style='color: green;'>Contrat modifié avec succès.</p>";
-        } else {
-            echo "<p style='color: red;'>Erreur lors de la modification du contrat : $return</p>";
-        }
+        return $return;
     }
     return false;
 }
@@ -55,11 +47,8 @@ function modifierConge()
         $statut_conge = $_POST['nouveau_statut_conge'];
 
         $return = updateConge($matricule_emp, $type_conge, $statut_conge, $date_debut_conge, $date_fin_conge, $nb_jour_restant);
-        if ($return === true) {
-            echo "<p style='color: green;'>Congé modifié avec succès.</p>";
-        } else {
-            echo "<p style='color: red;'>Erreur lors de la modification du congé : $return</p>";
-        }
+
+        return $return;
     }
     return false;
 }
@@ -74,11 +63,8 @@ function modifierPresence()
         $statut_presence = $_POST['nouveau_statut_presence'];
 
         $return = updatePresence($matricule_emp, $heure_arrive, $heure_depart, $date_presence, $statut_presence);
-        if ($return === true) {
-            echo "<p style='color: green;'>Présence modifiée avec succès.</p>";
-        } else {
-            echo "<p style='color: red;'>Erreur lors de la modification de la présence : $return</p>";
-        }
+
+        return $return;
     }
     return false;
 }
