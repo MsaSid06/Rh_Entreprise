@@ -137,7 +137,7 @@ if (isset($_POST['generer_bulletin'])) {
         $mois      = (int) $_POST['mois_bulletin'];
         $annee     = (int) $_POST['annee_bulletin'];
 
-        // 1. Récupérer l'employé et son contrat actif
+       //c'est pour vérifier si le contrat de l'employé est actif et pour récupérer son salaire brut
         $employe = getEmployeContrat($matricule);
 
         if (!$employe) {
@@ -145,16 +145,16 @@ if (isset($_POST['generer_bulletin'])) {
         } else {
             $salaire_brut = (float) $employe['salaire_brut'];
 
-            // 2. Jours travaillés et absences injustifiées
+            //  voirs jours travaillés et absences injustifiées
             $nb_jours    = getNbJoursTravailles($matricule, $mois, $annee);
             $nb_absences = getNbAbsencesInjustifiees($matricule, $mois, $annee);
 
-            // 3. Calcul des retenues et salaire net (données calculées, non stockées)
+            // calcul des retenues et salaire net
             $retenue_unitaire = round($salaire_brut / 22, 2);
             $retenues_total   = round($retenue_unitaire * $nb_absences, 2);
             $salaire_net      = round($salaire_brut - $retenues_total, 2);
 
-            // 4. Enregistrement en base
+        
             $return = insertOuMajBulletin($matricule, $mois, $annee, $salaire_brut, $nb_jours, $nb_absences);
 
             if ($return === true) {
@@ -267,7 +267,7 @@ $bulletins = getAllBulletins();
 
     <div class="bulletin-ligne">
         <span>Salaire brut :</span>
-        <span><?= number_format($bulletin['salaire_brut'], 2, ',', ' ') ?> FCFA</span>
+        <span><?= number_format($bulletin['salaire_brut'], 2, ',', ' ') ?> EURO</span>
     </div>
     <div class="bulletin-ligne">
         <span>Jours travaillés :</span>
@@ -279,24 +279,17 @@ $bulletins = getAllBulletins();
     </div>
     <div class="bulletin-ligne" style="color:red;">
         <span>Retenue par jour d'absence non justifiée :</span>
-        <span><?= number_format($bulletin['retenue_unit'], 2, ',', ' ') ?> FCFA / jour</span>
+        <span><?= number_format($bulletin['retenue_unit'], 2, ',', ' ') ?> EURO / jour</span>
     </div>
     <div class="bulletin-ligne" style="color:red;">
         <span>Total retenues :</span>
-        <span>- <?= number_format($bulletin['retenues_total'], 2, ',', ' ') ?> FCFA</span>
+        <span>- <?= number_format($bulletin['retenues_total'], 2, ',', ' ') ?> EURO</span>
     </div>
 
     <div class="bulletin-total">
         <span>SALAIRE NET À PAYER :</span>
-        <span><?= number_format($bulletin['salaire_net'], 2, ',', ' ') ?> FCFA</span>
+        <span><?= number_format($bulletin['salaire_net'], 2, ',', ' ') ?> EURO</span>
     </div>
-
-    <p style="text-align:center; margin-top:20px;">
-        <button onclick="window.print()"
-            style="padding:8px 20px; cursor:pointer; background:#1b5e20; color:white; border:none; border-radius:4px; font-size:1em;">
-            Imprimer le bulletin
-        </button>
-    </p>
 </div>
 <?php endif; ?>
 
@@ -330,12 +323,12 @@ $bulletins = getAllBulletins();
                         <td><?= htmlspecialchars($b['nom'] . ' ' . $b['prenom']) ?></td>
                         <td><?= htmlspecialchars($b['matricule_emp']) ?></td>
                         <td><?= $mois_noms[$b['mois']] . ' ' . $b['annee'] ?></td>
-                        <td><?= number_format($b['salaire_brut'], 2, ',', ' ') ?> FCFA</td>
+                        <td><?= number_format($b['salaire_brut'], 2, ',', ' ') ?> EURO</td>
                         <td style="text-align:center;"><?= $b['nbr_jours_travaille'] ?></td>
                         <td style="text-align:center;"><?= $b['nbr_abs_injustifie'] ?></td>
-                        <td style="color:red;">- <?= number_format($retenues, 2, ',', ' ') ?> FCFA</td>
+                        <td style="color:red;">- <?= number_format($retenues, 2, ',', ' ') ?> EURO</td>
                         <td style="color:green; font-weight:bold;">
-                            <?= number_format($salaire_net, 2, ',', ' ') ?> FCFA
+                            <?= number_format($salaire_net, 2, ',', ' ') ?> EURO
                         </td>
                     </tr>
                 <?php endforeach; ?>
