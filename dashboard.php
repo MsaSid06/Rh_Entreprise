@@ -1,15 +1,13 @@
 <?php
-
 include "./header.php";
 require_once "config/database.php";
-//Tableau de bord RH :
+//Tableau de bord RH : 
 
 // 1-) Masse salariale du mois
 
 
 // 1-) Masse salariale du mois courant
-function getMasseSalarialeMoisCourant()
-{
+function getMasseSalarialeMoisCourant() {
     global $pdo;
     try {
         $sql = "SELECT SUM(salaire_brut) AS masse_salariale_totale
@@ -18,15 +16,14 @@ function getMasseSalarialeMoisCourant()
                   AND annee = YEAR(CURDATE())";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
     } catch (Exception $e) {
-        return ["erreur" => $e->getMessage()];
+        return ["erreur" => $e->getMessage()];  
     }
 }
 
 // 2-) Taux d'absentéisme du mois courant
-function getTauxAbsenteisme()
-{
+function getTauxAbsenteisme() {
     global $pdo;
     try {
         $sql = "SELECT 
@@ -38,15 +35,14 @@ function getTauxAbsenteisme()
                   AND annee = YEAR(CURDATE())";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
     } catch (Exception $e) {
         return ["erreur" => $e->getMessage()];
     }
 }
 
 // 3-) Congés en attente d'approbation
-function getCongeEnAttenteApprobation()
-{
+function getCongeEnAttenteApprobation() {
     global $pdo;
     try {
         $sql = "SELECT 
@@ -74,7 +70,44 @@ function getCongeEnAttenteApprobation()
 $masse    = getMasseSalarialeMoisCourant();
 $taux     = getTauxAbsenteisme();
 $conges   = getCongeEnAttenteApprobation();
+?>
 
-echo $masse['masse_salariale_totale'] . " FCFA <br/>";
-echo $taux['taux_absenteisme_global'] . " % <br/>";
-echo count($conges) . " congé(s) en attente";
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; padding: 1rem 0;">
+
+  <!-- Masse salariale -->
+  <div class="stat-card">
+    <div class="stat-label">
+      <i class="ti ti-currency-franc"></i>
+      Masse salariale totale
+    </div>
+    <p class="stat-value">
+      <?= number_format($masse['masse_salariale_totale'], 0, ',', ' ') ?>
+      <span class="stat-unit">FCFA</span>
+    </p>
+  </div>
+
+  <!-- Taux d'absentéisme -->
+  <div class="stat-card">
+    <div class="stat-label">
+      <i class="ti ti-chart-pie"></i>
+      Taux d'absentéisme global
+    </div>
+    <p class="stat-value">
+      <?= $taux['taux_absenteisme_global'] ?>
+      <span class="stat-unit">%</span>
+    </p>
+  </div>
+
+  <!-- Congés en attente -->
+  <div class="stat-card">
+    <div class="stat-label">
+      <i class="ti ti-clock-pause"></i>
+      Congés en attente
+    </div>
+    <p class="stat-value">
+      <?= count($conges) ?>
+      <span class="stat-unit">congé(s)</span>
+    </span>
+  </div>
+
+</div>
