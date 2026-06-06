@@ -4,12 +4,12 @@ require_once "update.php";
 
 function modifierEmploye()
 {
-    if (isset($_POST['nouveau_matricule_emp'], $_POST['nouveau_nom_emp'], $_POST['nouveau_prenom_emp'], $_POST['nouvelle_date_naissance'], $_POST['nouvel_email'], $_POST['nouvelle_date_embauche'], $_POST['nouveau_code_poste'], $_POST['nouveau_code_dept'])) {
+    if (isset($_POST['nouveau_matricule_emp'], $_POST['nouveau_nom_emp'], $_POST['nouveau_prenom_emp'], $_POST['nouvelle_date_naissance'], $_POST['nouveau_email'], $_POST['nouvelle_date_embauche'], $_POST['nouveau_code_poste'], $_POST['nouveau_code_dept'])) {
         $matricule_emp = strtoupper($_POST['nouveau_matricule_emp']);
         $nom_emp = strtoupper($_POST['nouveau_nom_emp']);
         $prenom_emp = ucfirst(strtolower($_POST['nouveau_prenom_emp']));
         $date_naissance = $_POST['nouvelle_date_naissance'];
-        $email = $_POST['nouvel_email'];
+        $email = $_POST['nouveau_email'];
         $date_embauche = $_POST['nouvelle_date_embauche'];
         $code_poste = strtoupper($_POST['nouveau_code_poste']);
         $code_dept = strtoupper($_POST['nouveau_code_dept']);
@@ -23,8 +23,8 @@ function modifierEmploye()
 
 function modifierContrat()
 {
-    if (isset($_POST['nouveau_matricule_emp'], $_POST['nouveau_type_contrat'], $_POST['nouvelle_date_debut_contrat'], $_POST['nouvelle_date_fin_contrat'], $_POST['nouveau_salaire_brut'], $_POST['nouveau_est_actif'])) {
-        $matricule_emp = strtoupper($_POST['nouveau_matricule_emp']);
+    if (isset($_POST['nouveau_matricule_emp_contrat'], $_POST['nouveau_type_contrat'], $_POST['nouvelle_date_debut_contrat'], $_POST['nouvelle_date_fin_contrat'], $_POST['nouveau_salaire_brut'], $_POST['nouveau_est_actif'])) {
+        $matricule_emp = strtoupper($_POST['nouveau_matricule_emp_contrat']);
         $type_contrat = $_POST['nouveau_type_contrat'];
         $date_debut_contrat = $_POST['nouvelle_date_debut_contrat'];
         $date_fin_contrat = $_POST['nouvelle_date_fin_contrat'];
@@ -38,8 +38,8 @@ function modifierContrat()
 
 function modifierConge()
 {
-    if (isset($_POST['nouveau_matricule_emp'], $_POST['nouvelle_date_debut_conge'], $_POST['nouvelle_date_fin_conge'], $_POST['nouveau_type_conge'], $_POST['nouveau_nb_jour_restant'], $_POST['nouveau_statut_conge'])) {
-        $matricule_emp = strtoupper($_POST['nouveau_matricule_emp']);
+    if (isset($_POST['nouveau_matricule_emp_conge'], $_POST['nouvelle_date_debut_conge'], $_POST['nouvelle_date_fin_conge'], $_POST['nouveau_type_conge'], $_POST['nouveau_nb_jour_restant'], $_POST['nouveau_statut_conge'])) {
+        $matricule_emp = strtoupper($_POST['nouveau_matricule_emp_conge']);
         $date_debut_conge = $_POST['nouvelle_date_debut_conge'];
         $date_fin_conge = $_POST['nouvelle_date_fin_conge'];
         $type_conge = $_POST['nouveau_type_conge'];
@@ -55,8 +55,8 @@ function modifierConge()
 
 function modifierPresence()
 {
-    if (isset($_POST['nouveau_matricule_emp'], $_POST['nouvelle_heure_arrive'], $_POST['nouvelle_heure_depart'], $_POST['nouvelle_date_presence'], $_POST['nouveau_statut_presence'])) {
-        $matricule_emp = strtoupper($_POST['nouveau_matricule_emp']);
+    if (isset($_POST['nouveau_matricule_emp_presence'], $_POST['nouvelle_heure_arrive'], $_POST['nouvelle_heure_depart'], $_POST['nouvelle_date_presence'], $_POST['nouveau_statut_presence'])) {
+        $matricule_emp = strtoupper($_POST['nouveau_matricule_emp_presence']);
         $heure_arrive = $_POST['nouvelle_heure_arrive'];
         $heure_depart = $_POST['nouvelle_heure_depart'];
         $date_presence = $_POST['nouvelle_date_presence'];
