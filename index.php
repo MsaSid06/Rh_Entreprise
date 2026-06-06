@@ -29,6 +29,10 @@
             <li><a href="resultat_traitement_conge.php">Traiter les demandes</a></li>
             <li><a href="solde_disponible_conge.php">Soldes de congés annuels</a></li>
         </ul>
+        <p>Question 4 </p>
+        <ul>
+            <li><a href="generer_bulletin.php">Générer un bulletin de paie</a></li>
+        </ul>
         <p>Question 5 </p>
         <ul>
             <li>
