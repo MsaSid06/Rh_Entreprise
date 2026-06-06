@@ -126,3 +126,40 @@ displayEmployesSansContratActif();
 
 displayContratsExpireSoon();
 ?>
+
+<style>
+    h3 {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-weight: normal;
+    }
+
+    table {
+        width: 90%;
+        margin: 0 auto 40px auto;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th,
+    h3 {
+        font-weight: 700;
+        font-size: 22px;
+    }
+
+    p {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    tr:hover {
+        background-color: #f9f9f9;
+    }
+</style>

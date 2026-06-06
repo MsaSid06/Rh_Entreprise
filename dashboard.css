@@ -1,0 +1,92 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.dashboard {
+    padding: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #f9fdf9;
+    border: 1px solid #a5d6a7;
+    border-radius: 8px;
+    padding: 16px 20px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #2e7d32;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 26px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.stat-unit {
+    font-size: 13px;
+    font-weight: 400;
+    color: #888;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2e7d32;
+    border-left: 3px solid #2e7d32;
+    padding-left: 10px;
+    margin-bottom: 12px;
+}
+
+.table-container {
+    border: 1px solid #a5d6a7;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.table-container thead {
+    background-color: #2e7d32;
+    color: #ffffff;
+}
+
+.table-container thead th {
+    padding: 10px 16px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.table-container tbody tr {
+    border-bottom: 1px solid #e8f5e9;
+}
+
+.table-container tbody tr:last-child { border-bottom: none; }
+
+.table-container tbody tr:hover { background-color: #f1f8f1; }
+
+.table-container tbody td {
+    padding: 10px 16px;
+    color: #333;
+}
