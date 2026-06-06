@@ -154,7 +154,7 @@ if (isset($_POST['generer_bulletin'])) {
             $retenues_total   = round($retenue_unitaire * $nb_absences, 2);
             $salaire_net      = round($salaire_brut - $retenues_total, 2);
 
-        
+            // Enregistrement en base
             $return = insertOuMajBulletin($matricule, $mois, $annee, $salaire_brut, $nb_jours, $nb_absences);
 
             if ($return === true) {
@@ -191,6 +191,25 @@ $bulletins = getAllBulletins();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Générer un Bulletin de Paie</title>
+    <style>
+    #bulletin-affiche {
+        max-width: 480px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-align: center !important;
+    }
+    #bulletin-affiche .bulletin-ligne {
+        display: block !important;
+        text-align: center !important;
+    }
+    #bulletin-affiche .bulletin-ligne span {
+        display: inline !important;
+    }
+    #bulletin-affiche .bulletin-total {
+        display: block !important;
+        text-align: center !important;
+    }
+</style>
 </head>
 <body>
 
