@@ -23,6 +23,12 @@
         <ul>
             <li><a href="./saisir_presence_departement.php">Saisir les presences pour un departement</a></li>
         </ul>
+        <p>Question 3</p>
+        <ul>
+            <li><a href="soumettre_demande_conge.php">Soumettre une demande de congé</a></li>
+            <li><a href="resultat_traitement_conge.php">Traiter les demandes</a></li>
+            <li><a href="solde_disponible_conge.php">Soldes de congés annuels</a></li>
+        </ul>
         <p>Question 5 </p>
         <ul>
             <li>
