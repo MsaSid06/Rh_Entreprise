@@ -1,4 +1,5 @@
 <?php
+include "./header.php";
 require_once "config/database.php";
 //Tableau de bord RH : 
 
