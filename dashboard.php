@@ -74,7 +74,7 @@ $masse    = getMasseSalarialeMoisCourant();
 $taux     = getTauxAbsenteisme();
 $conges   = getCongeEnAttenteApprobation();
 ?>
-
+<link rel="stylesheet" href="dashboard.css">
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; padding: 1rem 0;">
 
     <!-- Masse salariale -->
