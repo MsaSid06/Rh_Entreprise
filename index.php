@@ -23,6 +23,11 @@
         <ul>
             <li><a href="./saisir_presence_departement.php">Saisir les presences pour un departement</a></li>
         </ul>
+        <p>Question 5 </p>
+        <a href="suiviContrat.php">Suivi des contrats</a>
+
+        <p>Question 6</p>
+        <a href="dashboard.php">Dashboard</a>
         <!-- Veuillez ajouter ici les liens pour vos autres questions svpppppppppp !!!!-->
     </div>
 </body>
