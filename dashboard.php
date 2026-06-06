@@ -1,12 +1,15 @@
 <?php
+
+include "./header.php";
 require_once "config/database.php";
-//Tableau de bord RH : 
+//Tableau de bord RH :
 
 // 1-) Masse salariale du mois
 
 
 // 1-) Masse salariale du mois courant
-function getMasseSalarialeMoisCourant() {
+function getMasseSalarialeMoisCourant()
+{
     global $pdo;
     try {
         $sql = "SELECT SUM(salaire_brut) AS masse_salariale_totale
@@ -15,14 +18,15 @@ function getMasseSalarialeMoisCourant() {
                   AND annee = YEAR(CURDATE())";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC); 
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-        return ["erreur" => $e->getMessage()];  
+        return ["erreur" => $e->getMessage()];
     }
 }
 
 // 2-) Taux d'absentéisme du mois courant
-function getTauxAbsenteisme() {
+function getTauxAbsenteisme()
+{
     global $pdo;
     try {
         $sql = "SELECT 
@@ -34,14 +38,15 @@ function getTauxAbsenteisme() {
                   AND annee = YEAR(CURDATE())";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC); 
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
         return ["erreur" => $e->getMessage()];
     }
 }
 
 // 3-) Congés en attente d'approbation
-function getCongeEnAttenteApprobation() {
+function getCongeEnAttenteApprobation()
+{
     global $pdo;
     try {
         $sql = "SELECT 

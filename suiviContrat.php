@@ -1,6 +1,7 @@
 <?php
+include "./header.php";
 require_once "config/database.php";
-// Suivi des contrats : 
+// Suivi des contrats :
 
 // 1-) lister les CDD expirant bientôt
 
@@ -58,59 +59,68 @@ function getEmployeSansContratActif()
 
 
 // Fonction permettant d'afficher les contrats qui expirent bientot (moins de 15 jours)
-function displayContratsExpireSoon() {
+function displayContratsExpireSoon()
+{
     $contrats = getContratsExpireSoon();
     ?>
-    <h3>CDD expirant bientôt</h3>
+<h3>CDD expirant bientôt</h3>
 
-    <?php if (empty($contrats)): ?>
-        <p>Aucun CDD n'expire dans les 15 prochains jours.</p>
-    <?php else: ?>
-        <table>
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Expiration</th>
-                <th>Jours restants</th>
-            </tr>
-            <?php foreach ($contrats as $c): ?>
-            <tr>
-                <td><?= htmlspecialchars($c['nom_emp']) ?></td>
-                <td><?= htmlspecialchars($c['prenom_emp']) ?></td>
-                <td><?= htmlspecialchars($c['date_fin_contrat']) ?></td>
-                <td><?= $c['jours_restants'] ?> j</td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif;
+<?php if (empty($contrats)): ?>
+<p>Aucun CDD n'expire dans les 15 prochains jours.</p>
+<?php else: ?>
+<table>
+    <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Expiration</th>
+        <th>Jours restants</th>
+    </tr>
+    <?php foreach ($contrats as $c): ?>
+    <tr>
+        <td><?= htmlspecialchars($c['nom_emp']) ?>
+        </td>
+        <td><?= htmlspecialchars($c['prenom_emp']) ?>
+        </td>
+        <td><?= htmlspecialchars($c['date_fin_contrat']) ?>
+        </td>
+        <td><?= $c['jours_restants'] ?> j</td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif;
 }
 
 // Fonction permettant d'afficher les employes sans contrat actifs
-function displayEmployesSansContratActif() {
+function displayEmployesSansContratActif()
+{
     $employes = getEmployeSansContratActif();
     ?>
-    <h3>Employés sans contrat actif</h3>
+<h3>Employés sans contrat actif</h3>
 
-    <?php if (empty($employes)): ?>
-        <p>Tous les employés ont un contrat actif.</p>
-    <?php else: ?>
-        <table>
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Département</th>
-                <th>Poste</th>
-            </tr>
-            <?php foreach ($employes as $e): ?>
-            <tr>
-                <td><?= htmlspecialchars($e['nom_emp']) ?></td>
-                <td><?= htmlspecialchars($e['prenom_emp']) ?></td>
-                <td><?= htmlspecialchars($e['nom_dept']) ?></td>
-                <td><?= htmlspecialchars($e['poste']) ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif;
+<?php if (empty($employes)): ?>
+<p>Tous les employés ont un contrat actif.</p>
+<?php else: ?>
+<table>
+    <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Département</th>
+        <th>Poste</th>
+    </tr>
+    <?php foreach ($employes as $e): ?>
+    <tr>
+        <td><?= htmlspecialchars($e['nom_emp']) ?>
+        </td>
+        <td><?= htmlspecialchars($e['prenom_emp']) ?>
+        </td>
+        <td><?= htmlspecialchars($e['nom_dept']) ?>
+        </td>
+        <td><?= htmlspecialchars($e['poste']) ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif;
 }
 displayEmployesSansContratActif();
 

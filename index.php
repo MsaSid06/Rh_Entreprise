@@ -24,10 +24,18 @@
             <li><a href="./saisir_presence_departement.php">Saisir les presences pour un departement</a></li>
         </ul>
         <p>Question 5 </p>
-        <a href="suiviContrat.php">Suivi des contrats</a>
+        <ul>
+            <li>
+                <a href="suiviContrat.php">Suivi des contrats</a>
+            </li>
+        </ul>
 
         <p>Question 6</p>
-        <a href="dashboard.php">Dashboard</a>
+        <ul>
+            <li>
+                <a href="dashboard.php">Dashboard</a>
+            </li>
+        </ul>
         <!-- Veuillez ajouter ici les liens pour vos autres questions svpppppppppp !!!!-->
     </div>
 </body>
