@@ -31,7 +31,7 @@
         </ul>
         <p>Question 4 </p>
         <ul>
-            <li><a href="generer_bulletin.php">Générer un bulletin de paie</a></li>
+            <li><a href="./generer_bulletin.php">Générer un bulletin de paie</a></li>
         </ul>
         <p>Question 5 </p>
         <ul>

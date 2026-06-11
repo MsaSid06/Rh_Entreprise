@@ -1,157 +1,20 @@
 <?php
-require_once "config/database.php";
 
-function getAllEmployes(): array
+require_once 'Read.php';
+
+function bulletin_employer(string $matricule, int  $mois, int $anne)
 {
-    global $pdo;
-    $stmt = $pdo->query("SELECT matricule_emp, nom_emp, prenom_emp FROM Employe ORDER BY nom_emp");
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    $bull_dispo = getBulletins();
 
-function getEmployeContrat(string $matricule): array|false
-{
-    global $pdo;
-    $stmt = $pdo->prepare("
-        SELECT
-            e.nom_emp       AS nom,
-            e.prenom_emp    AS prenom,
-            e.matricule_emp AS matricule,
-            e.code_dept     AS departement,
-            c.salaire_brut
-        FROM Employe e
-        JOIN Contrat c ON c.matricule_emp = e.matricule_emp
-        WHERE e.matricule_emp = :mat
-          AND c.est_actif = 1
-        LIMIT 1
-    ");
-    $stmt->execute([':mat' => $matricule]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-// elle permet de vérifier si des présences existent pour l'employé et la période donnée
-function presenceExiste(string $matricule, int $mois, int $annee): bool
-{
-    global $pdo;
-    $stmt = $pdo->prepare("
-        SELECT COUNT(*)
-        FROM Presence
-        WHERE matricule_emp = :mat
-          AND MONTH(date_presence) = :mois
-          AND YEAR(date_presence)  = :annee
-    ");
-    $stmt->execute([':mat' => $matricule, ':mois' => $mois, ':annee' => $annee]);
-    return (int) $stmt->fetchColumn() > 0;
-}
-
-function getNbJoursTravailles(string $matricule, int $mois, int $annee): int
-{
-    global $pdo;
-    $stmt = $pdo->prepare("
-        SELECT COUNT(*)
-        FROM Presence
-        WHERE matricule_emp = :mat
-          AND MONTH(date_presence) = :mois
-          AND YEAR(date_presence)  = :annee
-          AND statut_presence      = 'present'
-    ");
-    $stmt->execute([':mat' => $matricule, ':mois' => $mois, ':annee' => $annee]);
-    return (int) $stmt->fetchColumn();
-}
-
-function getNbAbsencesInjustifiees(string $matricule, int $mois, int $annee): int
-{
-    global $pdo;
-    $stmt = $pdo->prepare("
-        SELECT COUNT(*)
-        FROM Presence p
-        WHERE p.matricule_emp    = :mat
-          AND MONTH(p.date_presence) = :mois
-          AND YEAR(p.date_presence)  = :annee
-          AND p.statut_presence      = 'absent'
-          AND NOT EXISTS (
-              SELECT 1 FROM Conge c
-              WHERE c.matricule_emp  = p.matricule_emp
-                AND c.statut_conge   = 'approuve'
-                AND p.date_presence BETWEEN c.date_debut_conge AND c.date_fin_conge
-          )
-    ");
-    $stmt->execute([':mat' => $matricule, ':mois' => $mois, ':annee' => $annee]);
-    return (int) $stmt->fetchColumn();
-}
-
-// Valeurs déjà stockées dans BULLETIN (utilisées en repli s'il n'y a pas de présence)
-function getBulletinEnregistre(string $matricule, int $mois, int $annee): array|false
-{
-    global $pdo;
-    $stmt = $pdo->prepare("
-        SELECT nbr_jours_travaille AS nb_jours,
-               nbr_abs_injustifie  AS nb_absences
-        FROM Bulletin
-        WHERE matricule_emp = :mat AND mois = :mois AND annee = :annee
-        LIMIT 1
-    ");
-    $stmt->execute([':mat' => $matricule, ':mois' => $mois, ':annee' => $annee]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-function insertOuMajBulletin(
-    string $matricule,
-    int $mois,
-    int $annee,
-    float $salaire_brut,
-    int $nb_jours,
-    int $nb_absences
-): bool|string {
-    global $pdo;
-    try {
-        $stmt = $pdo->prepare("
-            SELECT COUNT(*) FROM Bulletin
-            WHERE matricule_emp = :mat AND mois = :mois AND annee = :annee
-        ");
-        $stmt->execute([':mat' => $matricule, ':mois' => $mois, ':annee' => $annee]);
-
-        if ($stmt->fetchColumn() > 0) {
-            $stmt2 = $pdo->prepare("
-                UPDATE Bulletin
-                SET salaire_brut        = :brut,
-                    nbr_jours_travaille = :jours,
-                    nbr_abs_injustifie  = :absences
-                WHERE matricule_emp = :mat AND mois = :mois AND annee = :annee
-            ");
-        } else {
-            $stmt2 = $pdo->prepare("
-                INSERT INTO Bulletin
-                    (matricule_emp, mois, annee, salaire_brut, nbr_jours_travaille, nbr_abs_injustifie)
-                VALUES
-                    (:mat, :mois, :annee, :brut, :jours, :absences)
-            ");
+    foreach ($bull_dispo as $b) {
+        if ($b['matricule_emp'] == $matricule && $b['mois'] == $mois && $b['annee'] == $anne) {
+            return $b;
         }
-
-        $stmt2->execute([
-            ':mat'      => $matricule,
-            ':mois'     => $mois,
-            ':annee'    => $annee,
-            ':brut'     => $salaire_brut,
-            ':jours'    => $nb_jours,
-            ':absences' => $nb_absences,
-        ]);
-        return true;
-    } catch (PDOException $e) {
-        return $e->getMessage();
     }
+    return -1;
 }
 
-function getAllBulletins(): array
-{
-    global $pdo;
-    $stmt = $pdo->query("
-        SELECT b.*, e.nom_emp AS nom, e.prenom_emp AS prenom
-        FROM Bulletin b
-        JOIN Employe e ON e.matricule_emp = b.matricule_emp
-        ORDER BY b.annee DESC, b.mois DESC, e.nom_emp
-    ");
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+
 
 $message = "";
 $bulletin = null;
@@ -162,64 +25,44 @@ $mois_noms = [
     9 => 'Septembre',10 => 'Octobre',11 => 'Novembre',12 => 'Décembre',
 ];
 
+$employes = getEmployes();
+
 if (isset($_POST['generer_bulletin'])) {
 
-    if (isset($_POST['matricule_emp_bulletin'], $_POST['mois_bulletin'], $_POST['annee_bulletin'])) {
+    $matricule = $_POST['matricule_emp_bulletin'];
+    $mois = (int) $_POST['mois_bulletin'];
+    $annee = (int) $_POST['annee_bulletin'];
 
-        $matricule = strtoupper($_POST['matricule_emp_bulletin']);
-        $mois      = (int) $_POST['mois_bulletin'];
-        $annee     = (int) $_POST['annee_bulletin'];
+    global $bulletin;
 
-        $employe = getEmployeContrat($matricule);
+    $b = bulletin_employer($matricule, $mois, $annee);
 
-        if (!$employe) {
-            $message = "Erreur : Aucun contrat actif trouvé pour cet employé.";
-        } else {
-            $salaire_brut = (float) $employe['salaire_brut'];
+    if ($b == -1) {
 
-            if (presenceExiste($matricule, $mois, $annee)) {
-                $nb_jours    = getNbJoursTravailles($matricule, $mois, $annee);
-                $nb_absences = getNbAbsencesInjustifiees($matricule, $mois, $annee);
-            } else {
-                $stocke      = getBulletinEnregistre($matricule, $mois, $annee);
-                $nb_jours    = $stocke ? (int) $stocke['nb_jours'] : 0;
-                $nb_absences = $stocke ? (int) $stocke['nb_absences'] : 0;
-            }
+        echo '<script>
+                alert("Pas de bulletin disponible pour cette période. Veuillez renseigner les bonnes valeurs !");
+              </script>';
 
-            // Retenues et salaire net
-            $retenue_unitaire = round($salaire_brut / 22, 2);
-            $retenues_total   = round($retenue_unitaire * $nb_absences, 2);
-            $salaire_net      = round($salaire_brut - $retenues_total, 2);
+    } else {
 
-            // Enregistrement dans l'historique
-            $return = insertOuMajBulletin($matricule, $mois, $annee, $salaire_brut, $nb_jours, $nb_absences);
+        $employes = getEmployes();
 
-            if ($return === true) {
-                $message = "Bulletin généré et enregistré dans l'historique.";
-                $bulletin = [
-                    'nom'            => $employe['nom'],
-                    'prenom'         => $employe['prenom'],
-                    'matricule'      => $employe['matricule'],
-                    'departement'    => $employe['departement'],
-                    'mois'           => $mois,
-                    'annee'          => $annee,
-                    'salaire_brut'   => $salaire_brut,
-                    'nb_jours'       => $nb_jours,
-                    'nb_absences'    => $nb_absences,
-                    'retenue_unit'   => $retenue_unitaire,
-                    'retenues_total' => $retenues_total,
-                    'salaire_net'    => $salaire_net,
-                ];
-            } else {
-                $message = "Erreur : $return";
+        foreach ($employes as $emp) {
+
+            if ($emp['matricule_emp'] == $matricule) {
+
+                $b["code_dept"] = $emp["code_dept"];
+                $b["code_poste"] = $emp["code_poste"];
+                $b["nom_emp"] = $emp["nom_emp"];
+                $b["prenom_emp"] = $emp["prenom_emp"];
+
+                $bulletin = $b;
+
+                break;
             }
         }
     }
 }
-
-$employes  = getAllEmployes();
-$bulletins = getAllBulletins();
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -229,47 +72,12 @@ $bulletins = getAllBulletins();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Générer un Bulletin de Paie</title>
-    <style>
-        #bulletin-affiche {
-            max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-        }
-
-        #bulletin-affiche .bulletin-ligne {
-            display: block;
-            text-align: center;
-        }
-
-        #bulletin-affiche .bulletin-ligne span {
-            display: inline;
-        }
-
-        #bulletin-affiche .bulletin-total {
-            display: block;
-            text-align: center;
-        }
-    </style>
 </head>
 
 <body>
-
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.php">Accueil</a></li>
-                <li><a href="#generer-bulletin-form">Générer un bulletin</a></li>
-                <li><a href="#historique-bulletins">Historique des bulletins</a></li>
-            </ul>
-        </nav>
-        <h4 style="color: #e9ff6a; margin-top: 20px;">Tous les champs sont obligatoires</h4>
-        <?php if (!empty($message)) : ?>
-        <script>
-            alert("<?= addslashes($message) ?>");
-        </script>
-        <?php endif; ?>
-    </header>
+    <?php
+        include './header.php';
+?>
 
     <!-- formulaire -->
     <form method="post" action="" class="form-container" id="generer-bulletin-form">
@@ -278,19 +86,17 @@ $bulletins = getAllBulletins();
         <label for="matricule_emp_bulletin">Employé :</label>
         <select id="matricule_emp_bulletin" name="matricule_emp_bulletin" required>
             <option value="">-- Choisir un employé --</option>
-            <?php foreach ($employes as $emp) : ?>
-            <option
-                value="<?= htmlspecialchars($emp['matricule_emp']) ?>"
-                <?= (isset($_POST['matricule_emp_bulletin']) && $_POST['matricule_emp_bulletin'] === $emp['matricule_emp']) ? 'selected' : '' ?>>
-                <?= htmlspecialchars($emp['matricule_emp'] . ' — ' . $emp['nom_emp'] . ' ' . $emp['prenom_emp']) ?>
-            </option>
-            <?php endforeach; ?>
-        </select><br>
+            <?php
+            foreach ($employes as $emp) {
+                echo "<option value='{$emp['matricule_emp']}' name='matricule_choisi'>{$emp['matricule_emp']} -- {$emp['nom_emp']}  {$emp['nom_emp']} </option>";
+            }
+?>
+        </select>
 
         <label for="mois_bulletin">Mois :</label>
         <select id="mois_bulletin" name="mois_bulletin" required>
             <?php foreach ($mois_noms as $num => $nom) : ?>
-            <option value="<?= $num ?>" <?= (isset($_POST['mois_bulletin']) && (int)$_POST['mois_bulletin'] === $num) ? 'selected' : '' ?>>
+            <option value="<?= $num ?>">
                 <?= $nom ?>
             </option>
             <?php endforeach; ?>
@@ -299,124 +105,105 @@ $bulletins = getAllBulletins();
         <label for="annee_bulletin">Année :</label>
         <input type="number" id="annee_bulletin" name="annee_bulletin"
             value="<?= isset($_POST['annee_bulletin']) ? (int)$_POST['annee_bulletin'] : date('Y') ?>"
-            min="2020" max="2100" required><br>
+            min="1999" max="2026" required><br>
 
         <input type="submit" value="Générer le bulletin" name="generer_bulletin">
     </form>
 
     <!-- bulletin généré -->
     <?php if ($bulletin) : ?>
+
+    <?php
+$retenues = $bulletin['salaire_brut'] / 22;
+        $total_retenues = $retenues * $bulletin['nbr_abs_injustifie'];
+        $net = $bulletin['salaire_brut'] - $total_retenues;
+        ?>
+
     <div class="bulletin-paie" id="bulletin-affiche">
         <h3>Bulletin de Paie</h3>
 
-        <div class="bulletin-ligne">
-            <span>Employé :</span>
-            <span><?= htmlspecialchars($bulletin['nom'] . ' ' . $bulletin['prenom']) ?></span>
-        </div>
-        <div class="bulletin-ligne">
-            <span>Matricule :</span>
-            <span><?= htmlspecialchars($bulletin['matricule']) ?></span>
-        </div>
-        <div class="bulletin-ligne">
-            <span>Département :</span>
-            <span><?= htmlspecialchars($bulletin['departement']) ?></span>
-        </div>
-        <div class="bulletin-ligne">
-            <span>Période :</span>
-            <span><?= $mois_noms[$bulletin['mois']] . ' ' . $bulletin['annee'] ?></span>
-        </div>
+        <table border="1" cellpadding="8" cellspacing="0" width="100%">
+            <tr>
+                <th colspan="2">Informations de l'employé</th>
+            </tr>
 
-        <br>
+            <tr>
+                <td><strong>Employé</strong></td>
+                <td><?= $bulletin['nom_emp'] . ' ' . $bulletin['prenom_emp'] ?>
+                </td>
+            </tr>
 
-        <div class="bulletin-ligne">
-            <span>Salaire brut :</span>
-            <span><?= number_format($bulletin['salaire_brut'], 2, ',', ' ') ?>
-                EURO</span>
-        </div>
-        <div class="bulletin-ligne">
-            <span>Jours travaillés :</span>
-            <span><?= $bulletin['nb_jours'] ?>
-                jour(s)</span>
-        </div>
-        <div class="bulletin-ligne">
-            <span>Absences injustifiées :</span>
-            <span><?= $bulletin['nb_absences'] ?>
-                jour(s)</span>
-        </div>
-        <div class="bulletin-ligne" style="color:red;">
-            <span>Retenue par jour d'absence non justifiée :</span>
-            <span><?= number_format($bulletin['retenue_unit'], 2, ',', ' ') ?>
-                EURO / jour</span>
-        </div>
-        <div class="bulletin-ligne" style="color:red;">
-            <span>Total retenues :</span>
-            <span>-
-                <?= number_format($bulletin['retenues_total'], 2, ',', ' ') ?>
-                EURO</span>
-        </div>
+            <tr>
+                <td><strong>Matricule</strong></td>
+                <td><?= $bulletin['matricule_emp'] ?>
+                </td>
+            </tr>
 
-        <div class="bulletin-total">
-            <span>SALAIRE NET À PAYER :</span>
-            <span><?= number_format($bulletin['salaire_net'], 2, ',', ' ') ?>
-                EURO</span>
-        </div>
-    </div>
-    <?php endif; ?>
+            <tr>
+                <td><strong>Département</strong></td>
+                <td><?= $bulletin['code_dept'] ?>
+                </td>
+            </tr>
 
-    <!-- historique des bulletins -->
-    <div class="result-container" id="historique-bulletins">
-        <h2>Historique des bulletins</h2>
+            <tr>
+                <td><strong>Poste</strong></td>
+                <td><?= $bulletin['code_poste'] ?>
+                </td>
+            </tr>
 
-        <?php if (empty($bulletins)) : ?>
-        <p>Aucun bulletin généré pour l'instant.</p>
-        <?php else : ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Employé</th>
-                    <th>Matricule</th>
-                    <th>Période</th>
-                    <th>Salaire brut</th>
-                    <th>Jours travaillés</th>
-                    <th>Absences injust.</th>
-                    <th>Retenues (calculées)</th>
-                    <th>Salaire net (calculé)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($bulletins as $b) :
-                    $retenues    = round(($b['salaire_brut'] / 22) * $b['nbr_abs_injustifie'], 2);
-                    $salaire_net = round($b['salaire_brut'] - $retenues, 2);
-                    ?>
-                <tr>
-                    <td><?= htmlspecialchars($b['nom'] . ' ' . $b['prenom']) ?>
-                    </td>
-                    <td><?= htmlspecialchars($b['matricule_emp']) ?>
-                    </td>
-                    <td><?= $mois_noms[$b['mois']] . ' ' . $b['annee'] ?>
-                    </td>
-                    <td><?= number_format($b['salaire_brut'], 2, ',', ' ') ?>
-                        EURO</td>
-                    <td style="text-align:center;">
-                        <?= $b['nbr_jours_travaille'] ?>
-                    </td>
-                    <td style="text-align:center;">
-                        <?= $b['nbr_abs_injustifie'] ?>
-                    </td>
-                    <td style="color:red;">-
-                        <?= number_format($retenues, 2, ',', ' ') ?>
-                        EURO</td>
-                    <td style="color:green; font-weight:bold;">
-                        <?= number_format($salaire_net, 2, ',', ' ') ?>
-                        EURO
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
+            <tr>
+                <td><strong>Période</strong></td>
+                <td><?= $mois_noms[$bulletin['mois']] . ' ' . $bulletin['annee'] ?>
+                </td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Détails de la paie</th>
+            </tr>
+
+            <tr>
+                <td><strong>Salaire brut</strong></td>
+                <td><?= number_format($bulletin['salaire_brut'], 2, ',', ' ') ?>
+                    EURO</td>
+            </tr>
+
+            <tr>
+                <td><strong>Jours travaillés</strong></td>
+                <td><?= $bulletin['nbr_jours_travaille'] ?>
+                    jour(s)</td>
+            </tr>
+
+            <tr>
+                <td><strong>Absences injustifiées</strong></td>
+                <td><?= $bulletin['nbr_abs_injustifie'] ?>
+                    jour(s)</td>
+            </tr>
+
+            <tr>
+                <td style="color: #c62828;"><strong>Retenue par jour d'absence</strong></td>
+                <td style="color: #c62828;">-
+                    <?= number_format($retenues, 2, ',', ' ') ?>
+                    EURO / jour
+                </td>
+            </tr>
+
+            <tr class="retenue">
+                <td><strong>Total retenues</strong></td>
+                <td>-
+                    <?= number_format($total_retenues, 2, ',', ' ') ?>
+                    EURO
+                </td>
+            </tr>
+
+            <tr class="net">
+                <th>SALAIRE NET À PAYER</th>
+                <th><?= number_format($net, 2, ',', ' ') ?>
+                    EURO</th>
+            </tr>
         </table>
-        <?php endif; ?>
     </div>
 
+    <?php endif; ?>
 </body>
 
 </html>

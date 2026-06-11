@@ -152,5 +152,61 @@ input[type="submit"]:hover {
   color: rgb(148, 19, 19);
 }
 
+/* '''''''''''''''''''' */
 
+/* Bulletin de paie - tableau */
+.bulletin-paie {
+  margin: 2rem auto;
+  max-width: 700px;
+  padding: 0 1rem;
+}
 
+.bulletin-paie h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #2e7d32;
+  font-size: 1.2rem;
+}
+
+.bulletin-paie table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem; /* petit espace sous le tableau */
+}
+
+.bulletin-paie table th,
+.bulletin-paie table td {
+  padding: 10px 14px;
+  border: 1px solid #c8e6c9;
+  text-align: left;
+}
+
+.bulletin-paie table th[colspan="2"] {
+  background-color: #2e7d32;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.bulletin-paie table tr:nth-child(even) td {
+  background-color: #f1f8f1;
+}
+
+.bulletin-paie table tr:hover td {
+  background-color: #e8f5e9;
+}
+
+.bulletin-paie table tr.retenue td {
+  color: #c62828;
+  font-weight: 500;
+}
+
+.bulletin-paie table tr.net th {
+  background-color: #1b5e20;
+  color: #ffffff;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+}
